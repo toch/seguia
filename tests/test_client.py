@@ -27,9 +27,18 @@ class TestClient(unittest.TestCase):
 		assert json == [data1, data3]
 
 	@requests_mock.Mocker()
-	def test_index_curates_data_and_returns_an_id(self,mock):
+	def test_index_curates_data_and_returns_an_id(self, mock):
 		data = { 'format': 'csv' }
 		created_data = { 'id': 'd8c77454-093d-4a44-a53b-2970f9f942b1', 'format': 'csv'}
 		mock.post('/data', json=created_data, status_code=202)
 		json = self.client.index(data)
 		assert json['id'] is not None
+
+	@requests_mock.Mocker()
+	def test_upload_pushes_the_data_into_oasis(self, mock):
+		id = '9e2398f8-be14-4365-b09e-31bcec9d7a47'
+		file = 'tests/fixtures/example.csv'
+		mock.put('/data/' + id, status_code=307, headers={'Location': 'https://s3.amazon.com/oasis/1'})
+		mock.put('https://s3.amazon.com/oasis/1', status_code=200)
+		assert self.client.upload(id, os.path.abspath(file)) == True
+

@@ -21,3 +21,9 @@ class Client:
 	def index(self, data):
 		response = requests.post(self.hostname + '/data', data=data, headers=self.headers)
 		return response.json()
+
+	def upload(self, id, file):
+		with open(file, 'rb') as data:
+		    response = requests.put(self.hostname + '/data/' + id, data=data, allow_redirects=True)
+		    return response.status_code == 200
+		return False
