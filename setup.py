@@ -8,4 +8,7 @@ setup(name="seguia",
 	author_email = 'christophe.philemotte@euranova.eu',
 	url = 'https://github.com/toch/seguia',
 	test_suite="tests",
-	install_requires=["requests==2.18.4"])
+	install_requires=["requests==2.18.4"],
+  setup_requires=['pytest-runner'],
+  tests_require=['pytest'],
+  )
