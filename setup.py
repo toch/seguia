@@ -10,5 +10,5 @@ setup(name="seguia",
 	test_suite="tests",
 	install_requires=["requests==2.18.4"],
   setup_requires=['pytest-runner'],
-  tests_require=['pytest', 'pytest-cov'],
+  tests_require=['pytest', 'pytest-cov', 'requests_mock'],
   )
