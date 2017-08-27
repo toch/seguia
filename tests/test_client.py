@@ -1,6 +1,8 @@
 import requests_mock
 import unittest
 import os
+import tempfile
+import filecmp
 
 from seguia.client import Client
 
@@ -41,4 +43,19 @@ class TestClient(unittest.TestCase):
 		mock.put('/data/' + id, status_code=307, headers={'Location': 'https://s3.amazon.com/oasis/1'})
 		mock.put('https://s3.amazon.com/oasis/1', status_code=200)
 		assert self.client.upload(id, os.path.abspath(file)) == True
+
+	@requests_mock.Mocker()
+	def test_download_pulls_the_data_from_oasis(self, mock):
+		id = '9e2398f8-be14-4365-b09e-31bcec9d7a47'
+		expected_file = 'tests/fixtures/example.csv'
+		mock.get('/data/' + id, status_code=307, headers={'Location': 'https://s3.amazon.com/oasis/1'})
+		with open(expected_file, 'rb') as data:
+			mock.get('https://s3.amazon.com/oasis/1', content=data.read(), status_code=200)
+
+		with tempfile.NamedTemporaryFile() as file:
+			self.client.download(id, file.name)
+			assert filecmp.cmp(file.name, os.path.abspath(expected_file))
+
+
+
 

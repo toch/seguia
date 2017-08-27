@@ -22,8 +22,14 @@ class Client:
 		response = requests.post(self.hostname + '/data', data=data, headers=self.headers)
 		return response.json()
 
-	def upload(self, id, file):
-		with open(file, 'rb') as data:
+	def upload(self, id, filename):
+		with open(filename, 'rb') as data:
 		    response = requests.put(self.hostname + '/data/' + id, data=data, allow_redirects=True)
 		    return response.status_code == 200
 		return False
+
+	def download(self, id, filename):
+		response = requests.get(self.hostname + '/data/' + id, allow_redirects=True)
+		with open(filename, 'wb') as fd:
+		    for chunk in response.iter_content(chunk_size=128):
+		    		fd.write(chunk)
