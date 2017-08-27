@@ -17,3 +17,7 @@ class Client:
 			criteria['tags'] = tags
 		response = requests.get(self.hostname + '/data', params=criteria, headers=self.headers)
 		return response.json()
+
+	def index(self, data):
+		response = requests.post(self.hostname + '/data', data=data, headers=self.headers)
+		return response.json()

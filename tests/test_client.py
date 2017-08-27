@@ -11,7 +11,7 @@ class TestClient(unittest.TestCase):
 
 	@requests_mock.Mocker()
 	def test_search_returns_an_empty_json_array(self, mock):
-		mock.get('/data?', json=[], status_code=200)
+		mock.get('/data', json=[], status_code=200)
 		json = self.client.search()
 		assert json == []
 
@@ -26,3 +26,10 @@ class TestClient(unittest.TestCase):
 		json = self.client.search(format='csv')
 		assert json == [data1, data3]
 
+	@requests_mock.Mocker()
+	def test_index_curates_data_and_returns_an_id(self,mock):
+		data = { 'format': 'csv' }
+		created_data = { 'id': 'd8c77454-093d-4a44-a53b-2970f9f942b1', 'format': 'csv'}
+		mock.post('/data', json=created_data, status_code=202)
+		json = self.client.index(data)
+		assert json['id'] is not None
