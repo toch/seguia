@@ -24,7 +24,7 @@ json = client.index({'format': 'csv'})
 client.upload(json['id'], 'example.csv')
 
 json = client.search(format='csv')
-client.get(json[0]['id'], 'myfile.csv')
+client.download(json[0]['id'], 'myfile.csv')
 ```
 
 ## Run the tests
