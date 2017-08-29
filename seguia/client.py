@@ -1,4 +1,5 @@
 import requests
+import json
 
 class Client:
 
@@ -19,7 +20,7 @@ class Client:
 		return response.json()
 
 	def index(self, data):
-		response = requests.post(self.hostname + '/data', data=data, headers=self.headers)
+		response = requests.post(self.hostname + '/data', data=json.dumps(data), headers=self.headers)
 		return response.json()
 
 	def upload(self, id, filename):
